@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zhengru.LeaveManagementSystem.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="top.zhengru.LeaveManagementSystem.entity.SysUser">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="unitId" column="unit_id" jdbcType="VARCHAR"/>
+            <result property="classNo" column="classno" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="isTeacher" column="is_teacher" jdbcType="TINYINT"/>
+            <result property="isEnabled" column="is_enabled" jdbcType="TINYINT"/>
+            <result property="isAccountNonLocked" column="is_account_non_locked" jdbcType="TINYINT"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="RoleInfoVoMap" type="top.zhengru.LeaveManagementSystem.vo.RoleInfoVO">
+        <id property="roleName" column="roleName"/>
+        <result property="roleCode" column="roleCode"/>
+        <result property="rolePid" column="rolePid"/>
+        <collection property="permInfoVOList" ofType="top.zhengru.LeaveManagementSystem.vo.PermInfoVO">
+            <id property="permission" column="permission"/>
+            <result property="permName" column="permName"/>
+            <result property="permValue" column="permValue"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,username,real_name, unit_id, classno,
+        password,is_teacher,is_enabled,is_account_non_locked,
+        is_deleted
+    </sql>
+    <update id="resetPwd">
+        update sys_user
+        set password = #{pwd}
+        where id = #{id}
+    </update>
+    <update id="modifyPwd">
+        update sys_user
+        set password = #{newPwd}
+        where username = #{username};
+    </update>
+    <select id="queryPermByUserId" resultMap="RoleInfoVoMap">
+        SELECT
+            r.role_name AS roleName,
+            r.code AS roleCode,
+            r.pid AS rolePid,
+            p.permission,
+            p.name AS permName,
+            p.value AS permValue
+        FROM
+            sys_user_role ur
+                LEFT JOIN sys_role r ON r.id = ur.role_id
+                LEFT JOIN sys_role_perm rp ON r.id = rp.role_id
+                LEFT JOIN sys_permission p ON p.id = rp.permission_id
+        WHERE
+            ur.user_id = #{userId}
+          AND ur.is_deleted = 0
+          AND r.is_deleted = 0
+          AND rp.is_deleted = 0
+          AND p.is_deleted = 0
+          AND r.status = 1
+          AND p.status = 1;
+
+    </select>
+    <select id="getUserInfo" resultType="top.zhengru.LeaveManagementSystem.vo.UserInfoVO">
+        select u.real_name as realName, u.username as username
+        from sys_user u
+        where u.username = #{username}
+    </select>
+    <select id="getRole" resultType="java.lang.String">
+        select
+            r.description as roleName
+        from
+            sys_user u, sys_role r, sys_user_role ur
+        where
+            u.id = ur.user_id and ur.role_id = r.id and u.username = #{username}
+    </select>
+    <select id="getUserInfoById" resultType="top.zhengru.LeaveManagementSystem.entity.SysUser">
+        select *
+        from sys_user
+        where id = #{id}
+    </select>
+    <select id="getUserPwdByUsername" resultType="java.lang.String">
+        select password
+        from sys_user
+        where username = #{username}
+    </select>
+    <select id="getTeacherList" resultType="top.zhengru.LeaveManagementSystem.vo.UserInfoVO">
+        SELECT sus.username as username, sus.real_name as realName
+             , sus.is_teacher as isTeacher, sui.unitname as unitName
+        from sys_user sus, sys_unit sui
+        WHERE sus.unit_id = sui.id and sus.real_name LIKE concat('%', #{keyword}, '%')
+          and sus.is_teacher = 1 and sus.is_deleted = 0 and sui.is_deleted = 0
+    </select>
+</mapper>

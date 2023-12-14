@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zhengru.LeaveManagementSystem.mapper.SysClassMapper">
+
+    <resultMap id="BaseResultMap" type="top.zhengru.LeaveManagementSystem.entity.SysClass">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="classno" column="classno" jdbcType="VARCHAR"/>
+            <result property="major" column="major" jdbcType="VARCHAR"/>
+            <result property="teachNo" column="teach_no" jdbcType="VARCHAR"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,classno,major,
+        teach_no,is_deleted
+    </sql>
+    <select id="queryClassByUserId" resultType="top.zhengru.LeaveManagementSystem.entity.SysClass">
+        select *
+        from sys_class sc, sys_user su
+        where su.classno = sc.classno and su.id = #{userId} and sc.is_deleted = 0 and su.is_deleted = 0
+    </select>
+</mapper>

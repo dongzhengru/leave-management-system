@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zhengru.LeaveManagementSystem.mapper.SysUnitMapper">
+
+    <resultMap id="BaseResultMap" type="top.zhengru.LeaveManagementSystem.entity.SysUnit">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="unitname" column="unitname" jdbcType="VARCHAR"/>
+            <result property="headerNo" column="header_no" jdbcType="VARCHAR"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,unitname,header_no,
+        is_deleted
+    </sql>
+    <select id="queryUnitByUserId" resultType="top.zhengru.LeaveManagementSystem.entity.SysUnit">
+        select uni.*
+        from sys_user sus, sys_unit uni
+        where sus.unit_id = uni.id and sus.id = #{userId} and sus.is_deleted = 0 and uni.is_deleted = 0
+    </select>
+</mapper>
