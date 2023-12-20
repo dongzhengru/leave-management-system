@@ -7,6 +7,9 @@ import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.param.NewLeaveParam;
 import top.zhengru.LeaveManagementSystem.param.QueryLeaveParam;
 import top.zhengru.LeaveManagementSystem.service.LeaveInfoService;
+import top.zhengru.LeaveManagementSystem.service.SysClassService;
+import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
+import top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO;
 import top.zhengru.LeaveManagementSystem.vo.LeaveInfoVO;
 
 import java.util.Map;
@@ -22,6 +25,8 @@ import java.util.Map;
 public class LeaveController {
     @Autowired
     LeaveInfoService leaveInfoService;
+    @Autowired
+    SysClassService sysClassService;
 
     /**
      * 生成审批编号
@@ -30,6 +35,15 @@ public class LeaveController {
     @GetMapping("/getLeaveNo")
     public ResponseResult<Map<String, String>> getLeaveNo() {
         return leaveInfoService.getLeaveNo();
+    }
+
+    /**
+     * 获取辅导员信息
+     * @return
+     */
+    @GetMapping("/getClassTeach")
+    public ResponseResult<ApprovalProcessVO> getClassTeach() {
+        return sysClassService.getClassTeach();
     }
 
     /**
@@ -50,6 +64,16 @@ public class LeaveController {
     @PostMapping("/queryLeave")
     public ResponseResult<PageResult> queryLeave(QueryLeaveParam queryLeaveParam) {
         return leaveInfoService.queryLeave(queryLeaveParam);
+    }
+
+    /**
+     * 查询请假详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/queryLeaveDetail")
+    public ResponseResult<LeaveDetailVO> queryLeaveDetail(@RequestParam Integer id) {
+        return leaveInfoService.queryLeaveDetail(id);
     }
 
 }

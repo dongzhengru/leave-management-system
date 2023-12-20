@@ -21,4 +21,10 @@
         from sys_class sc, sys_user su
         where su.classno = sc.classno and su.id = #{userId} and sc.is_deleted = 0 and su.is_deleted = 0
     </select>
+    <select id="queryClassTeachInfoByClassNo"
+            resultType="top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO">
+        select sc.teach_no as username, su.real_name as realName
+        from sys_class sc, sys_user su
+        where sc.teach_no = su.username and sc.classno = #{classNo} and sc.is_deleted = 0 and su.is_deleted = 0
+    </select>
 </mapper>

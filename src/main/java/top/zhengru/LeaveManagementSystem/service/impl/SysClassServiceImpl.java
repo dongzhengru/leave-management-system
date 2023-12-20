@@ -2,10 +2,13 @@ package top.zhengru.LeaveManagementSystem.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import top.zhengru.LeaveManagementSystem.service.SysClassService;
 import top.zhengru.LeaveManagementSystem.mapper.SysClassMapper;
 import org.springframework.stereotype.Service;
+import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
 
 /**
 * @author 董政儒
@@ -27,6 +30,18 @@ public class SysClassServiceImpl extends ServiceImpl<SysClassMapper, SysClass>
     @Override
     public SysClass queryClassByUserId(Integer userId) {
         return sysClassMapper.queryClassByUserId(userId);
+    }
+
+    /**
+     * 获取辅导员信息
+     * @return
+     */
+    @Override
+    public ResponseResult<ApprovalProcessVO> getClassTeach() {
+        UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        ApprovalProcessVO teachInfo = sysClassMapper.queryClassTeachInfoByClassNo(userDetail.getClassNo());
+        return new ResponseResult<>(200, teachInfo);
     }
 }
 

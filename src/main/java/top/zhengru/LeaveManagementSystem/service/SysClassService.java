@@ -1,8 +1,12 @@
 package top.zhengru.LeaveManagementSystem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
+
+import java.util.Map;
 
 /**
 * @author 董政儒
@@ -17,4 +21,10 @@ public interface SysClassService extends IService<SysClass> {
      * @return
      */
     SysClass queryClassByUserId(Integer userId);
+
+    /**
+     * 获取辅导员信息
+     * @return
+     */
+    ResponseResult<ApprovalProcessVO> getClassTeach();
 }

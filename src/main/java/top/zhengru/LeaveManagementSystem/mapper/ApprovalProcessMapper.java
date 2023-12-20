@@ -2,6 +2,10 @@ package top.zhengru.LeaveManagementSystem.mapper;
 
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
+import top.zhengru.LeaveManagementSystem.vo.ccPersonVO;
+
+import java.util.List;
 
 /**
 * @author 董政儒
@@ -11,6 +15,19 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ApprovalProcessMapper extends BaseMapper<ApprovalProcess> {
 
+    /**
+     * 查询审批流程详情
+     * @param id
+     * @return
+     */
+    List<ApprovalProcessVO> queryApprovalProcess(Integer id);
+
+    /**
+     * 查询抄送详情
+     * @param id
+     * @return
+     */
+    List<ccPersonVO> queryCcPersons(Integer id);
 }
 
 

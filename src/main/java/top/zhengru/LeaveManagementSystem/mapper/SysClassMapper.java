@@ -2,6 +2,7 @@ package top.zhengru.LeaveManagementSystem.mapper;
 
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
 
 /**
 * @author 董政儒
@@ -17,6 +18,13 @@ public interface SysClassMapper extends BaseMapper<SysClass> {
      * @return
      */
     SysClass queryClassByUserId(Integer userId);
+
+    /**
+     * 获取辅导员信息
+     * @param classNo
+     * @return
+     */
+    ApprovalProcessVO queryClassTeachInfoByClassNo(String classNo);
 }
 
 

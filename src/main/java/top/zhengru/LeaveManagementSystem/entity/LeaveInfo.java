@@ -84,7 +84,7 @@ public class LeaveInfo implements Serializable {
     private String url;
 
     /**
-     * 审批状态（驳回-2、撤销-1、待审批0、审批中1、通过2）
+     * 审批状态（驳回-2、撤销-1、审批中0、通过1）
      */
     private Integer status;
 

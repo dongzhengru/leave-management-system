@@ -56,4 +56,31 @@
         <if test="leaveType !=null and leaveType != ''">and li.leave_type = #{leaveType}</if>
         <if test="status !=null and status != ''">and li.status = #{status}</if>
     </select>
+    <resultMap id="LeaveDetailVO" type="top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO">
+        <id column="id" property="id"/>
+        <id column="leaveNo" property="leaveNo"/>
+        <id column="unitName" property="unitName"/>
+        <id column="major" property="major"/>
+        <id column="classNo" property="classNo"/>
+        <id column="username" property="username"/>
+        <id column="realName" property="realName"/>
+        <id column="phone" property="phone"/>
+        <id column="leaveType" property="leaveType"/>
+        <id column="startTime" property="startTime"/>
+        <id column="endTime" property="endTime"/>
+        <id column="isEvening" property="isEvening"/>
+        <id column="remark" property="remark"/>
+        <id column="createTime" property="createTime"/>
+        <id column="url" property="url"  typeHandler="top.zhengru.LeaveManagementSystem.handler.StringListTypeHandler"/>
+        <result column="nowOrder" property="nowOrder"/>
+    </resultMap>
+    <select id="queryLeaveDetail" resultMap="LeaveDetailVO">
+        select li.id, li.leave_no as leaveNo, li.unit_name as unitName, li.major,
+               li.classno as classNo, li.username, li.real_name as realName,
+               li.phone, li.leave_type as leaveType, li.start_time as startTime,
+               li.end_time as endTime, li.is_evening as isEvening, li.remark,
+               li.create_time as createTime, li.url, li.status, li.now_order as nowOrder
+        from leave_info li
+        where li.id = #{id} and li.is_deleted = 0
+    </select>
 </mapper>

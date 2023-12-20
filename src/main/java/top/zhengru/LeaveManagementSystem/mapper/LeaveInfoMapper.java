@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import top.zhengru.LeaveManagementSystem.entity.LeaveInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.zhengru.LeaveManagementSystem.param.QueryLeaveParam;
+import top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO;
 import top.zhengru.LeaveManagementSystem.vo.LeaveInfoVO;
 
 import java.util.List;
@@ -29,6 +30,13 @@ public interface LeaveInfoMapper extends BaseMapper<LeaveInfo> {
      * @return
      */
     Page<LeaveInfoVO> queryLeave(QueryLeaveParam queryLeaveParam);
+
+    /**
+     * 查询请假详情
+     * @param id
+     * @return
+     */
+    LeaveDetailVO queryLeaveDetail(Integer id);
 }
 
 

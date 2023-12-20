@@ -20,6 +20,7 @@ import top.zhengru.LeaveManagementSystem.service.LeaveInfoService;
 import top.zhengru.LeaveManagementSystem.mapper.LeaveInfoMapper;
 import org.springframework.stereotype.Service;
 import top.zhengru.LeaveManagementSystem.utils.MinIOUtils;
+import top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO;
 import top.zhengru.LeaveManagementSystem.vo.LeaveInfoVO;
 
 import java.text.SimpleDateFormat;
@@ -67,6 +68,7 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
         leaveInfo.setLeaveType(newLeaveParam.getLeaveType());
         leaveInfo.setIsEvening(newLeaveParam.getIsEvening());
         leaveInfo.setRemark(newLeaveParam.getRemark());
+        leaveInfo.setUrl(null);
         leaveInfo.setStatus(0);
         leaveInfo.setNowOrder(1);
         leaveInfo.setCreateTime(new Date());
@@ -75,25 +77,27 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
         String currentDate = DATE_FORMAT.format(new Date());
 
-        List<String> url = new ArrayList<>();
-        for (MultipartFile file : newLeaveParam.getFiles()) {
-            String imgUrl = null;
-            try {
-                String oldFilename = file.getOriginalFilename();
-                // 以日期归档，文件名生成格式：姓名_学号_审批编号_UUID
-                String newFileName = currentDate + "/";
-                newFileName += userDetail.getRealName() + "_" + userDetail.getUsername()
-                        + "_" + newLeaveParam.getLeaveNo() + "_" + UUID.randomUUID()
-                        + oldFilename.substring(oldFilename.lastIndexOf('.'));
-                MinIOUtils.uploadFile(minIOConfig.getBucketName(), newFileName,
-                        file.getInputStream());
-                imgUrl = MinIOUtils.getBasisUrl() + newFileName;
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (newLeaveParam.getFiles() != null) {
+            List<String> url = new ArrayList<>();
+            for (MultipartFile file : newLeaveParam.getFiles()) {
+                String imgUrl = null;
+                try {
+                    String oldFilename = file.getOriginalFilename();
+                    // 以日期归档，文件名生成格式：姓名_学号_审批编号_UUID
+                    String newFileName = currentDate + "/";
+                    newFileName += userDetail.getRealName() + "_" + userDetail.getUsername()
+                            + "_" + newLeaveParam.getLeaveNo() + "_" + UUID.randomUUID()
+                            + oldFilename.substring(oldFilename.lastIndexOf('.'));
+                    MinIOUtils.uploadFile(minIOConfig.getBucketName(), newFileName,
+                            file.getInputStream());
+                    imgUrl = MinIOUtils.getBasisUrl() + newFileName;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                url.add(imgUrl);
             }
-            url.add(imgUrl);
+            leaveInfo.setUrl(url.toString());
         }
-        leaveInfo.setUrl(url.toString());
 
         // 插入请假单数据
         Integer count = leaveInfoMapper.newLeave(leaveInfo);
@@ -133,17 +137,21 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
             order++;
         }
         // 审批流程表添加抄送人
-        for (String ccPerson : ccPersons) {
-            ApprovalProcess approvalProcess = new ApprovalProcess();
-            approvalProcess.setLeaveId(leaveId);
-            approvalProcess.setApproverNo(ccPerson);
-            // 不参与审批流程
-            approvalProcess.setApproveOrder(-1);
-            // 人员类型为抄送人
-            approvalProcess.setAction(0);
-            approvalProcess.setStatus(0);
-            approvalProcess.setIsLast(0);
-            count += approvalProcessMapper.insert(approvalProcess);
+        if (!ccPersons.contains("")) {
+            for (String ccPerson : ccPersons) {
+                ApprovalProcess approvalProcess = new ApprovalProcess();
+                approvalProcess.setLeaveId(leaveId);
+                approvalProcess.setApproverNo(ccPerson);
+                // 不参与审批流程
+                approvalProcess.setApproveOrder(-1);
+                // 人员类型为抄送人
+                approvalProcess.setAction(0);
+                approvalProcess.setStatus(0);
+                approvalProcess.setIsLast(0);
+                count += approvalProcessMapper.insert(approvalProcess);
+            }
+        } else {
+            ccPersons.remove("");
         }
         if (count == approvalPersons.size() + ccPersons.size() + 1) {
             return new ResponseResult<>(200, "提交成功！");
@@ -191,6 +199,19 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
         Map<String, String> leaveNo = new HashMap<>();
         leaveNo.put("leaveNo", currentDate + number);
         return new ResponseResult<>(200, leaveNo);
+    }
+
+    /**
+     * 查询请假详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult<LeaveDetailVO> queryLeaveDetail(Integer id) {
+        LeaveDetailVO leaveDetailVO = leaveInfoMapper.queryLeaveDetail(id);
+        leaveDetailVO.setApprovalProcess(approvalProcessMapper.queryApprovalProcess(id));
+        leaveDetailVO.setCcPersons(approvalProcessMapper.queryCcPersons(id));
+        return new ResponseResult<>(200, leaveDetailVO);
     }
 }
 

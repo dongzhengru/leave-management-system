@@ -6,6 +6,7 @@ import top.zhengru.LeaveManagementSystem.entity.LeaveInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.zhengru.LeaveManagementSystem.param.NewLeaveParam;
 import top.zhengru.LeaveManagementSystem.param.QueryLeaveParam;
+import top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO;
 import top.zhengru.LeaveManagementSystem.vo.LeaveInfoVO;
 
 import java.util.Map;
@@ -36,4 +37,11 @@ public interface LeaveInfoService extends IService<LeaveInfo> {
      * @return
      */
     ResponseResult<Map<String, String>> getLeaveNo();
+
+    /**
+     * 查询请假详情
+     * @param id
+     * @return
+     */
+    ResponseResult<LeaveDetailVO> queryLeaveDetail(Integer id);
 }
