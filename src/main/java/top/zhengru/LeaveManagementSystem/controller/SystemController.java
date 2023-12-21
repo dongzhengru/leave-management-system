@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import top.zhengru.LeaveManagementSystem.base.PageResult;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysMenu;
+import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
 import top.zhengru.LeaveManagementSystem.param.SysUserParam;
 import top.zhengru.LeaveManagementSystem.service.SysMenuService;
 import top.zhengru.LeaveManagementSystem.service.SysPermissionService;
+import top.zhengru.LeaveManagementSystem.service.SysUnitService;
 import top.zhengru.LeaveManagementSystem.service.SysUserService;
+import top.zhengru.LeaveManagementSystem.vo.UnitInfoVO;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,8 @@ public class SystemController {
     SysPermissionService sysPermissionService;
     @Autowired
     RedisTemplate redisTemplate;
+    @Autowired
+    SysUnitService sysUnitService;
 
     /**
      * 查询主页菜单
@@ -70,5 +75,14 @@ public class SystemController {
     @GetMapping("/getAllUser")
     public ResponseResult<PageResult> getAllUser(SysUserParam sysUserParam) {
         return sysUserService.getAllUser(sysUserParam);
+    }
+
+    /**
+     * 查询所有二级学院
+     * @return
+     */
+    @GetMapping("/getAllUnit")
+    public ResponseResult<List<UnitInfoVO>> getAllUnit() {
+        return sysUnitService.getAllUnit();
     }
 }

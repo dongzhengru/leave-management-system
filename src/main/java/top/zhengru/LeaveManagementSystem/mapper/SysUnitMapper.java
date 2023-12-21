@@ -2,6 +2,9 @@ package top.zhengru.LeaveManagementSystem.mapper;
 
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.zhengru.LeaveManagementSystem.vo.UnitInfoVO;
+
+import java.util.List;
 
 /**
 * @author 董政儒
@@ -17,6 +20,13 @@ public interface SysUnitMapper extends BaseMapper<SysUnit> {
      * @return
      */
     SysUnit queryUnitByUserId(Integer userId);
+
+    /**
+     * 查询所有二级学院
+     * @return
+     */
+    List<UnitInfoVO> getAllUnit();
+
 }
 
 

@@ -20,4 +20,9 @@
         from sys_user sus, sys_unit uni
         where sus.unit_id = uni.id and sus.id = #{userId} and sus.is_deleted = 0 and uni.is_deleted = 0
     </select>
+    <select id="getAllUnit" resultType="top.zhengru.LeaveManagementSystem.vo.UnitInfoVO">
+        select sus.id as id, sus.unitname as unitName, sus.header_no as headerNo, su.real_name as headerName
+        from sys_unit sus, sys_user su
+        where sus.header_no = su.username and su.is_deleted = 0 and sus.is_deleted = 0
+    </select>
 </mapper>

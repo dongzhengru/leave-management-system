@@ -1,7 +1,11 @@
 package top.zhengru.LeaveManagementSystem.service;
 
+import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.zhengru.LeaveManagementSystem.vo.UnitInfoVO;
+
+import java.util.List;
 
 /**
 * @author 董政儒
@@ -16,4 +20,11 @@ public interface SysUnitService extends IService<SysUnit> {
      * @return
      */
     SysUnit queryUnitByUserId(Integer userId);
+
+    /**
+     * 查询所有二级学院
+     * @return
+     */
+    ResponseResult<List<UnitInfoVO>> getAllUnit();
+
 }
