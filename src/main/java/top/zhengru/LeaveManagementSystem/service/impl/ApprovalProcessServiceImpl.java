@@ -63,17 +63,60 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
         // 设置审批意见和审批状态
         approvalInfo.setReason(reason);
         approvalInfo.setStatus(2);
+        approvalInfo.setCompleteTime(new Date());
         approvalProcessMapper.updateById(approvalInfo);
         leaveInfo.setNowOrder(leaveInfo.getNowOrder() + 1);
-        leaveInfo.setCompleteTime(new Date());
         leaveInfoMapper.updateById(leaveInfo);
         // 如果该审批人是最后节点，更新请假单为审批通过
         if (approvalInfo.getIsLast() == 1) {
             leaveInfo.setStatus(1);
+            leaveInfo.setNowOrder(leaveInfo.getNowOrder() - 1);
             leaveInfo.setCompleteTime(new Date());
             leaveInfoMapper.updateById(leaveInfo);
         }
         return new ResponseResult<>(200, "审批通过成功！");
+    }
+
+    /**
+     * 驳回审批
+     * @param leaveId
+     * @param reason
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseResult<Map<String, String>> rejectApproval(Integer leaveId, String reason) {
+        UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        LeaveInfo leaveInfo = leaveInfoMapper.selectById(leaveId);
+        if (leaveInfo.getStatus() != 0) {
+            return new ResponseResult<>(500, "审批失败，此请假单审批流程已结束！");
+        }
+        QueryWrapper<ApprovalProcess> approvalProcessQueryWrapper = new QueryWrapper<>();
+        approvalProcessQueryWrapper.eq("leave_id", leaveId);
+        approvalProcessQueryWrapper.eq("approver_no", userDetail.getUsername());
+        approvalProcessQueryWrapper.eq("action", 1);
+        ApprovalProcess approvalInfo = approvalProcessMapper.selectOne(approvalProcessQueryWrapper);
+        if (approvalInfo == null) {
+            return new ResponseResult<>(500, "审批失败，无审批权限！");
+        }
+        if (!Objects.equals(leaveInfo.getNowOrder(), approvalInfo.getApproveOrder())) {
+            return new ResponseResult<>(500, "审批失败，您不是当前审批节点！");
+        }
+        if (approvalInfo.getStatus() == 2) {
+            return new ResponseResult<>(500, "审批失败，您已通过该审批！");
+        }
+        // 设置审批意见和审批状态
+        approvalInfo.setReason(reason);
+        approvalInfo.setStatus(-1);
+        approvalInfo.setCompleteTime(new Date());
+        approvalProcessMapper.updateById(approvalInfo);
+        // 更新请假单为审批驳回（无需判断是最后节点）
+        leaveInfo.setStatus(-2);
+        leaveInfo.setCompleteTime(new Date());
+        leaveInfoMapper.updateById(leaveInfo);
+
+        return new ResponseResult<>(200, "审批驳回成功！");
     }
 }
 

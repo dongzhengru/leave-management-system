@@ -20,4 +20,12 @@ public interface ApprovalProcessService extends IService<ApprovalProcess> {
      * @return
      */
     ResponseResult<Map<String, String>> agreeApproval(Integer leaveId, String reason);
+
+    /**
+     * 驳回审批
+     * @param leaveId
+     * @param reason
+     * @return
+     */
+    ResponseResult<Map<String, String>> rejectApproval(Integer leaveId, String reason);
 }

@@ -29,4 +29,15 @@ public class ApprovalController {
     public ResponseResult<Map<String, String>> agreeApproval(@RequestParam Integer id, @RequestParam String reason) {
         return approvalProcessService.agreeApproval(id, reason);
     }
+
+    /**
+     * 驳回审批
+     * @param id
+     * @param reason
+     * @return
+     */
+    @PostMapping("/reject")
+    public ResponseResult<Map<String, String>> rejectApproval(@RequestParam Integer id, @RequestParam String reason) {
+        return approvalProcessService.rejectApproval(id, reason);
+    }
 }
