@@ -23,6 +23,11 @@
         status,is_last,complete_time,
         is_deleted
     </sql>
+    <update id="readLeaveDetail">
+        update approval_process
+        set status = 1, complete_time = #{completeTime}
+        where leave_id = #{leaveId} and approver_no = #{approverNo} and action = 0 and is_deleted = 0
+    </update>
     <resultMap id="ApprovalProcessVO" type="top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO">
         <result property="realName" column="realName"/>
         <result property="username" column="username"/>
@@ -34,7 +39,8 @@
         </collection>
     </resultMap>
     <select id="queryApprovalProcess" resultMap="ApprovalProcessVO">
-        select su.real_name as realName, su.username, ap.reason, ap.status, sr.description as roleName
+        select su.real_name as realName, su.username, ap.reason, ap.status,
+               sr.description as roleName, ap.complete_time as completeTime
         from approval_process ap, sys_user su, sys_role sr, sys_user_role sur
         where ap.approver_no = su.username and leave_id = #{id}
           and sur.user_id = su.id and sur.role_id = sr.id

@@ -1,5 +1,6 @@
 package top.zhengru.LeaveManagementSystem.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
@@ -28,6 +29,13 @@ public interface ApprovalProcessMapper extends BaseMapper<ApprovalProcess> {
      * @return
      */
     List<ccPersonVO> queryCcPersons(Integer id);
+
+    /**
+     * 抄送人设置已读
+     * @param approvalProcess
+     * @return
+     */
+    Integer readLeaveDetail(ApprovalProcess approvalProcess);
 }
 
 

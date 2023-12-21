@@ -1,7 +1,10 @@
 package top.zhengru.LeaveManagementSystem.service;
 
+import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
 * @author 董政儒
@@ -10,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ApprovalProcessService extends IService<ApprovalProcess> {
 
+    /**
+     * 同意审批
+     * @param leaveId
+     * @param reason
+     * @return
+     */
+    ResponseResult<Map<String, String>> agreeApproval(Integer leaveId, String reason);
 }

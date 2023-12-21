@@ -169,10 +169,17 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
     public ResponseResult<PageResult> queryLeave(QueryLeaveParam queryLeaveParam) {
         UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        if (userDetail.getRoles().contains("student")) {
+        if (userDetail.getRoles().contains("学生")) {
             queryLeaveParam.setUsername(userDetail.getUsername());
-        } else if (userDetail.getRoles().contains("teacher")) {
+        } else if (userDetail.getRoles().contains("教师")) {
             queryLeaveParam.setApproverNo(userDetail.getUsername());
+            if (userDetail.getRoles().contains("分院教务办老师") || userDetail.getRoles().contains("分院院长")) {
+                queryLeaveParam.setApproverNo(null);
+                queryLeaveParam.setUnitName(userDetail.getUnitName());
+            }
+            if (userDetail.getRoles().contains("教务处老师")) {
+                queryLeaveParam.setApproverNo(null);
+            }
         }
         Integer page = queryLeaveParam.getPage();
         Integer pageSize = queryLeaveParam.getPageSize();
@@ -207,7 +214,15 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
      * @return
      */
     @Override
+    @Transactional
     public ResponseResult<LeaveDetailVO> queryLeaveDetail(Integer id) {
+        UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        ApprovalProcess approvalProcess = new ApprovalProcess();
+        approvalProcess.setLeaveId(id);
+        approvalProcess.setApproverNo(userDetail.getUsername());
+        approvalProcess.setCompleteTime(new Date());
+        approvalProcessMapper.readLeaveDetail(approvalProcess);
         LeaveDetailVO leaveDetailVO = leaveInfoMapper.queryLeaveDetail(id);
         leaveDetailVO.setApprovalProcess(approvalProcessMapper.queryApprovalProcess(id));
         leaveDetailVO.setCcPersons(approvalProcessMapper.queryCcPersons(id));

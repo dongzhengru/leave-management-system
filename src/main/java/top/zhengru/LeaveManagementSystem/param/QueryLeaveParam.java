@@ -14,6 +14,7 @@ public class QueryLeaveParam {
     private Integer pageSize;
     private String username;
     private String approverNo;
+    private String unitName;
     private String realName;
     private String classNo;
     private String leaveType;

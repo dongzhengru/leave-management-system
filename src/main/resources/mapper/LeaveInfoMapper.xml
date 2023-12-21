@@ -51,10 +51,12 @@
           and li.is_deleted = 0 and ap.is_deleted = 0 and su.is_deleted = 0
         <if test="username != null and username != ''">and li.username = #{username}</if>
         <if test="approverNo != null and approverNo != ''">and ap.approver_no = #{approverNo}</if>
+        <if test="unitName != null and unitName != ''">and li.unit_name = #{unitName}</if>
         <if test="realName !=null and realName != ''">and li.real_name like concat('%', #{realName}, '%')</if>
         <if test="classNo !=null and classNo != ''">and li.classNo = #{classNo}</if>
         <if test="leaveType !=null and leaveType != ''">and li.leave_type = #{leaveType}</if>
         <if test="status !=null and status != ''">and li.status = #{status}</if>
+        order by li.create_time desc
     </select>
     <resultMap id="LeaveDetailVO" type="top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO">
         <id column="id" property="id"/>

@@ -7,7 +7,7 @@ import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import java.sql.SQLException;
 import java.util.Map;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public ResponseResult<Map<String, String>> sqlException(SQLException e){
