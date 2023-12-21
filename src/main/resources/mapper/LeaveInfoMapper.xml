@@ -55,7 +55,7 @@
         <if test="realName !=null and realName != ''">and li.real_name like concat('%', #{realName}, '%')</if>
         <if test="classNo !=null and classNo != ''">and li.classNo = #{classNo}</if>
         <if test="leaveType !=null and leaveType != ''">and li.leave_type = #{leaveType}</if>
-        <if test="status !=null and status != ''">and li.status = #{status}</if>
+        <if test="status !=null">and li.status = #{status}</if>
         order by li.create_time desc
     </select>
     <resultMap id="LeaveDetailVO" type="top.zhengru.LeaveManagementSystem.vo.LeaveDetailVO">
