@@ -9,6 +9,10 @@ import top.zhengru.LeaveManagementSystem.service.SysClassService;
 import top.zhengru.LeaveManagementSystem.mapper.SysClassMapper;
 import org.springframework.stereotype.Service;
 import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
+import top.zhengru.LeaveManagementSystem.vo.ClassInfoVO;
+import top.zhengru.LeaveManagementSystem.vo.UnitInfoVO;
+
+import java.util.List;
 
 /**
 * @author 董政儒
@@ -42,6 +46,16 @@ public class SysClassServiceImpl extends ServiceImpl<SysClassMapper, SysClass>
                 .getAuthentication().getPrincipal();
         ApprovalProcessVO teachInfo = sysClassMapper.queryClassTeachInfoByClassNo(userDetail.getClassNo());
         return new ResponseResult<>(200, teachInfo);
+    }
+
+    /**
+     * 查询所有班级
+     * @return
+     */
+    @Override
+    public ResponseResult<List<ClassInfoVO>> getAllClass() {
+        List<ClassInfoVO> classInfoVOS = sysClassMapper.getAllClass();
+        return new ResponseResult<>(200,classInfoVOS);
     }
 }
 

@@ -10,10 +10,8 @@ import top.zhengru.LeaveManagementSystem.entity.SysMenu;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
 import top.zhengru.LeaveManagementSystem.param.SysUserParam;
-import top.zhengru.LeaveManagementSystem.service.SysMenuService;
-import top.zhengru.LeaveManagementSystem.service.SysPermissionService;
-import top.zhengru.LeaveManagementSystem.service.SysUnitService;
-import top.zhengru.LeaveManagementSystem.service.SysUserService;
+import top.zhengru.LeaveManagementSystem.service.*;
+import top.zhengru.LeaveManagementSystem.vo.ClassInfoVO;
 import top.zhengru.LeaveManagementSystem.vo.UnitInfoVO;
 
 import java.util.List;
@@ -38,6 +36,8 @@ public class SystemController {
     RedisTemplate redisTemplate;
     @Autowired
     SysUnitService sysUnitService;
+    @Autowired
+    SysClassService sysClassService;
 
     /**
      * 查询主页菜单
@@ -84,5 +84,14 @@ public class SystemController {
     @GetMapping("/getAllUnit")
     public ResponseResult<List<UnitInfoVO>> getAllUnit() {
         return sysUnitService.getAllUnit();
+    }
+
+    /**
+     * 查询所有班级
+     * @return
+     */
+    @GetMapping("/getAllClass")
+    public ResponseResult<List<ClassInfoVO>> getAllClass() {
+        return sysClassService.getAllClass();
     }
 }

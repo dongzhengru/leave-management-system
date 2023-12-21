@@ -27,4 +27,9 @@
         from sys_class sc, sys_user su
         where sc.teach_no = su.username and sc.classno = #{classNo} and sc.is_deleted = 0 and su.is_deleted = 0
     </select>
+    <select id="getAllClass" resultType="top.zhengru.LeaveManagementSystem.vo.ClassInfoVO">
+        select sc.id as id, sc.classno as classNo, sc.major as major, sc.teach_no as teacherNo, su.real_name as teacherName
+        from sys_class sc, sys_user su
+        where sc.teach_no = su.username and su.is_deleted = 0 and sc.is_deleted = 0
+    </select>
 </mapper>

@@ -5,7 +5,9 @@ import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
+import top.zhengru.LeaveManagementSystem.vo.ClassInfoVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,4 +29,10 @@ public interface SysClassService extends IService<SysClass> {
      * @return
      */
     ResponseResult<ApprovalProcessVO> getClassTeach();
+
+    /**
+     * 查询所有班级
+     * @return
+     */
+    ResponseResult<List<ClassInfoVO>> getAllClass();
 }
