@@ -14,6 +14,7 @@ import java.util.List;
 
 @Data
 public class UserInfoVO implements Serializable {
+    private Integer id;
     private String username;
     private String realName;
     private String unitName;

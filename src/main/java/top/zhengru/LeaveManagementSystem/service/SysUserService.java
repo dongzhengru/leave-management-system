@@ -1,6 +1,7 @@
 package top.zhengru.LeaveManagementSystem.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import top.zhengru.LeaveManagementSystem.base.PageResult;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
@@ -8,6 +9,7 @@ import top.zhengru.LeaveManagementSystem.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.zhengru.LeaveManagementSystem.param.LoginUserParam;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
+import top.zhengru.LeaveManagementSystem.param.SysUserParam;
 import top.zhengru.LeaveManagementSystem.vo.RoleInfoVO;
 import top.zhengru.LeaveManagementSystem.vo.UserInfoVO;
 
@@ -61,4 +63,11 @@ public interface SysUserService extends IService<SysUser> {
      * @return
      */
     ResponseResult<List<UserInfoVO>> getTeacherList(String keyword);
+
+    /**
+     * 查询所有用户
+     * @param sysUserParam
+     * @return
+     */
+    ResponseResult<PageResult> getAllUser(SysUserParam sysUserParam);
 }

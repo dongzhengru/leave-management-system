@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import top.zhengru.LeaveManagementSystem.base.PageResult;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysMenu;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
+import top.zhengru.LeaveManagementSystem.param.SysUserParam;
 import top.zhengru.LeaveManagementSystem.service.SysMenuService;
 import top.zhengru.LeaveManagementSystem.service.SysPermissionService;
 import top.zhengru.LeaveManagementSystem.service.SysUserService;
@@ -46,7 +48,6 @@ public class SystemController {
      * @return
      */
     @GetMapping("/resetPwd")
-    @PreAuthorize("hasAuthority('admin')")
     public ResponseResult<Map<String, String>> resetPwd(Integer id){
         return sysUserService.resetPwd(id);
     }
@@ -59,5 +60,15 @@ public class SystemController {
     @PostMapping("/modifyPwd")
     public ResponseResult<Map<String, String>> modifyPwd(@RequestBody ModifyPwdParam modifyPwdParam){
         return sysUserService.modifyPwd(modifyPwdParam);
+    }
+
+    /**
+     * 查询所有用户
+     * @param sysUserParam
+     * @return
+     */
+    @GetMapping("/getAllUser")
+    public ResponseResult<PageResult> getAllUser(SysUserParam sysUserParam) {
+        return sysUserService.getAllUser(sysUserParam);
     }
 }

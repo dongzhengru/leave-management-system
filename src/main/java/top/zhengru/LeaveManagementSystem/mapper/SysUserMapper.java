@@ -1,9 +1,11 @@
 package top.zhengru.LeaveManagementSystem.mapper;
 
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Param;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import top.zhengru.LeaveManagementSystem.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.zhengru.LeaveManagementSystem.param.SysUserParam;
 import top.zhengru.LeaveManagementSystem.vo.RoleInfoVO;
 import top.zhengru.LeaveManagementSystem.vo.UserInfoVO;
 
@@ -66,6 +68,21 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @return
      */
     List<UserInfoVO> getTeacherList(String keyword);
+
+
+    /**
+     * 查询所有学生用户
+     * @param sysUserParam
+     * @return
+     */
+    Page<UserInfoVO> getAllStuUser(SysUserParam sysUserParam);
+
+    /**
+     * 查询所有教师用户
+     * @param sysUserParam
+     * @return
+     */
+    Page<UserInfoVO> getAllTeachUser(SysUserParam sysUserParam);
 }
 
 

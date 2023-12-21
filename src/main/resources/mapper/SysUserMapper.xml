@@ -96,4 +96,23 @@
         WHERE sus.unit_id = sui.id and sus.real_name LIKE concat('%', #{keyword}, '%')
           and sus.is_teacher = 1 and sus.is_deleted = 0 and sui.is_deleted = 0
     </select>
+    <select id="getAllStuUser" resultType="top.zhengru.LeaveManagementSystem.vo.UserInfoVO">
+        select su.id as id, sun.unitname as unitName, sc.major as major, sc.classno as classNo, su.username as username,
+               su.real_name as realName, su.is_teacher as isTeacher
+        from sys_user su, sys_unit sun, sys_class sc
+        where su.unit_id = sun.id and su.classno = sc.classno and su.username != 'admin' and su.is_teacher = 0
+          and su.is_deleted = 0 and sun.is_deleted = 0 and sc.is_deleted = 0
+        <if test="realName != null and realName != ''">and su.real_name like concat('%', #{realName} ,'%') </if>
+        <if test="username != null and username != ''">and su.username like concat('%', #{username} ,'%') </if>
+        <if test="classNo != null and classNo != ''">and sc.classno like concat('%', #{classNo} ,'%') </if>
+    </select>
+    <select id="getAllTeachUser" resultType="top.zhengru.LeaveManagementSystem.vo.UserInfoVO">
+        select su.id as id, sun.unitname as unitName, su.username as username,
+        su.real_name as realName, su.is_teacher as isTeacher
+        from sys_user su, sys_unit sun
+        where su.unit_id = sun.id and su.username != 'admin' and su.is_teacher = 1
+        and su.is_deleted = 0 and sun.is_deleted = 0
+        <if test="realName != null and realName != ''">and su.real_name like concat('%', #{realName} ,'%') </if>
+        <if test="username != null and username != ''">and su.username like concat('%', #{username} ,'%') </if>
+    </select>
 </mapper>

@@ -13,4 +13,7 @@ public class SysUserParam {
     private Integer page;
     private Integer pageSize;
     private String realName;
+    private String username;
+    private String classNo;
+    private Integer isTeacher;
 }

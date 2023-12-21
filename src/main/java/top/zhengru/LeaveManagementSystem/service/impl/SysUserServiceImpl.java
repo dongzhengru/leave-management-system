@@ -3,6 +3,8 @@ package top.zhengru.LeaveManagementSystem.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.zhengru.LeaveManagementSystem.base.PageResult;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
@@ -19,6 +22,7 @@ import top.zhengru.LeaveManagementSystem.entity.SysUser;
 import top.zhengru.LeaveManagementSystem.mapper.SysUserMapper;
 import top.zhengru.LeaveManagementSystem.param.LoginUserParam;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
+import top.zhengru.LeaveManagementSystem.param.SysUserParam;
 import top.zhengru.LeaveManagementSystem.service.SysUnitService;
 import top.zhengru.LeaveManagementSystem.service.SysUserService;
 import top.zhengru.LeaveManagementSystem.utils.JwtUtils;
@@ -127,7 +131,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
             String pwd = bCryptPasswordEncoder.encode(sysUser.getUsername());
             sysUserMapper.resetPwd(id, pwd);
         }
-        return new ResponseResult<>(200, "用户："  + sysUser.getRealName() + " 密码重置成功");
+        return new ResponseResult<>(200, "用户："  + sysUser.getRealName() + " 密码重置成功，默认密码为学号！");
     }
 
     /**
@@ -163,6 +167,31 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
             teacherInfo.setRole(sysUserMapper.getRole(teacherInfo.getUsername()));
         }
         return new ResponseResult<>(200, teacherList);
+    }
+
+    /**
+     * 查询所有用户
+     * @param sysUserParam
+     * @return
+     */
+    @Override
+    public ResponseResult<PageResult> getAllUser(SysUserParam sysUserParam) {
+        Integer page = sysUserParam.getPage();
+        Integer pageSize = sysUserParam.getPageSize();
+        if (page == null) {
+            page = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 20;
+        }
+        PageHelper.startPage(page, pageSize);
+        Page<UserInfoVO> allUsers = new Page<>();
+        if (sysUserParam.getIsTeacher() == 0) {
+            allUsers = sysUserMapper.getAllStuUser(sysUserParam);
+        } else {
+            allUsers = sysUserMapper.getAllTeachUser(sysUserParam);
+        }
+        return new ResponseResult<>(200, new PageResult(allUsers.getTotal(), allUsers));
     }
 }
 
