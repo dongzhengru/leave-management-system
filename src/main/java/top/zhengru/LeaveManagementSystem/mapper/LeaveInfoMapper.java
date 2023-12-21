@@ -37,6 +37,20 @@ public interface LeaveInfoMapper extends BaseMapper<LeaveInfo> {
      * @return
      */
     LeaveDetailVO queryLeaveDetail(Integer id);
+
+    /**
+     * 查询教师审批总单量
+     * @param username
+     * @return
+     */
+    Integer countTeacherTotal(String username);
+
+    /**
+     * 查询学生平均审批耗时
+     * @param username
+     * @return
+     */
+    Double stuAvgTime(String username);
 }
 
 

@@ -1,5 +1,6 @@
 package top.zhengru.LeaveManagementSystem.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -13,7 +14,9 @@ import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.config.MinIOConfig;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import top.zhengru.LeaveManagementSystem.entity.LeaveInfo;
+import top.zhengru.LeaveManagementSystem.entity.SysUser;
 import top.zhengru.LeaveManagementSystem.mapper.ApprovalProcessMapper;
+import top.zhengru.LeaveManagementSystem.mapper.SysUserMapper;
 import top.zhengru.LeaveManagementSystem.param.NewLeaveParam;
 import top.zhengru.LeaveManagementSystem.param.QueryLeaveParam;
 import top.zhengru.LeaveManagementSystem.service.LeaveInfoService;
@@ -43,6 +46,8 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
     ApprovalProcessMapper approvalProcessMapper;
     @Autowired
     MinIOConfig minIOConfig;
+    @Autowired
+    SysUserMapper sysUserMapper;
 
     /**
      * 学生发起请假

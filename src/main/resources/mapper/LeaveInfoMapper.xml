@@ -85,4 +85,15 @@
         from leave_info li
         where li.id = #{id} and li.is_deleted = 0
     </select>
+    <select id="countTeacherTotal" resultType="java.lang.Integer">
+        select count(*)
+        from leave_info li, approval_process ap
+        where li.id = ap.leave_id and ap.approver_no = #{username}
+          and ap.action = 1 and li.is_deleted = 0 and ap.is_deleted = 0
+    </select>
+    <select id="stuAvgTime" resultType="java.lang.Double">
+        select AVG(TIMESTAMPDIFF(HOUR, li.create_time, li.complete_time))
+        from leave_info li
+        where li.username = #{username} and complete_time is not null and li.is_deleted = 0;
+    </select>
 </mapper>

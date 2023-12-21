@@ -54,4 +54,17 @@
         where ap.approver_no = su.username and leave_id = #{id}
           and ap.action = 0 and ap.is_deleted = 0 and su.is_deleted = 0
     </select>
+    <select id="countUnFinished" resultType="java.lang.Integer">
+        select count(*) as taskCount
+        from leave_info li, approval_process ap
+        where li.id = ap.leave_id and li.now_order = ap.approve_order
+          and ap.approver_no = #{username} and ap.action = 1 and ap.status = 0
+          and li.is_deleted = 0 and ap.is_deleted = 0
+    </select>
+    <select id="teachAvgTime" resultType="java.lang.Double">
+        select AVG(TIMESTAMPDIFF(HOUR, li.create_time, ap.complete_time)) AS average_waiting_time
+        from leave_info li, approval_process ap
+        where li.id = ap.leave_id and ap.approver_no = '29011'
+          and ap.complete_time is not null and li.is_deleted = 0 and ap.is_deleted = 0
+    </select>
 </mapper>

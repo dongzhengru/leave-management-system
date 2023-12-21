@@ -3,6 +3,7 @@ package top.zhengru.LeaveManagementSystem.service;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.zhengru.LeaveManagementSystem.vo.StatisticVO;
 
 import java.util.Map;
 
@@ -28,4 +29,16 @@ public interface ApprovalProcessService extends IService<ApprovalProcess> {
      * @return
      */
     ResponseResult<Map<String, String>> rejectApproval(Integer leaveId, String reason);
+
+    /**
+     * 统计待审批数量
+     * @return
+     */
+    ResponseResult<Map<String, Integer>> countUnFinished();
+
+    /**
+     * 查询审批数据统计
+     * @return
+     */
+    ResponseResult<StatisticVO> statistic();
 }

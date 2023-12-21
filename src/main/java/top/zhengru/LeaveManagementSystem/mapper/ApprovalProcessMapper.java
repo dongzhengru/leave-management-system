@@ -3,6 +3,7 @@ package top.zhengru.LeaveManagementSystem.mapper;
 import org.apache.ibatis.annotations.Param;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.zhengru.LeaveManagementSystem.service.impl.UserDetailImpl;
 import top.zhengru.LeaveManagementSystem.vo.ApprovalProcessVO;
 import top.zhengru.LeaveManagementSystem.vo.ccPersonVO;
 
@@ -36,6 +37,20 @@ public interface ApprovalProcessMapper extends BaseMapper<ApprovalProcess> {
      * @return
      */
     Integer readLeaveDetail(ApprovalProcess approvalProcess);
+
+    /**
+     * 统计待审批数量
+     * @param username
+     * @return
+     */
+    Integer countUnFinished(String username);
+
+    /**
+     * 查询教师平均审批耗时
+     * @param username
+     * @return
+     */
+    Double teachAvgTime(String username);
 }
 
 

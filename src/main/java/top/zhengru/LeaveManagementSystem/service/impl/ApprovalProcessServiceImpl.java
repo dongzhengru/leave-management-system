@@ -12,8 +12,10 @@ import top.zhengru.LeaveManagementSystem.mapper.LeaveInfoMapper;
 import top.zhengru.LeaveManagementSystem.service.ApprovalProcessService;
 import top.zhengru.LeaveManagementSystem.mapper.ApprovalProcessMapper;
 import org.springframework.stereotype.Service;
+import top.zhengru.LeaveManagementSystem.vo.StatisticVO;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -117,6 +119,48 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
         leaveInfoMapper.updateById(leaveInfo);
 
         return new ResponseResult<>(200, "审批驳回成功！");
+    }
+
+    /**
+     * 统计待审批数量
+     * @return
+     */
+    @Override
+    public ResponseResult<Map<String, Integer>> countUnFinished() {
+        UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+        Integer result = approvalProcessMapper.countUnFinished(userDetail.getUsername());
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put("unFinished", result);
+        return new ResponseResult<>(200, resultMap);
+    }
+
+    /**
+     * 查询审批数据统计
+     * @return
+     */
+    @Override
+    public ResponseResult<StatisticVO> statistic() {
+        UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+        StatisticVO statisticVO = new StatisticVO();
+        statisticVO.setTotal(0);
+        statisticVO.setUnFinished(0);
+        statisticVO.setAvgTime(0.0);
+        if (userDetail.getRoles().contains("学生")) {
+            QueryWrapper<LeaveInfo> leaveInfoQueryWrapper = new QueryWrapper<>();
+            leaveInfoQueryWrapper.eq("username", userDetail.getUsername());
+            statisticVO.setTotal(leaveInfoMapper.selectCount(leaveInfoQueryWrapper).intValue());
+            leaveInfoQueryWrapper.eq("status", 0);
+            statisticVO.setUnFinished(leaveInfoMapper.selectCount(leaveInfoQueryWrapper).intValue());
+            statisticVO.setAvgTime(leaveInfoMapper.stuAvgTime(userDetail.getUsername()));
+        }
+        if (userDetail.getRoles().contains("教师")) {
+            statisticVO.setTotal(leaveInfoMapper.countTeacherTotal(userDetail.getUsername()));
+            statisticVO.setUnFinished(approvalProcessMapper.countUnFinished(userDetail.getUsername()));
+            statisticVO.setAvgTime(approvalProcessMapper.teachAvgTime(userDetail.getUsername()));
+        }
+        return new ResponseResult<>(200, statisticVO);
     }
 }
 
