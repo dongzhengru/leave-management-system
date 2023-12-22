@@ -19,6 +19,7 @@ import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.SysClass;
 import top.zhengru.LeaveManagementSystem.entity.SysUnit;
 import top.zhengru.LeaveManagementSystem.entity.SysUser;
+import top.zhengru.LeaveManagementSystem.exception.CustomException;
 import top.zhengru.LeaveManagementSystem.mapper.SysUserMapper;
 import top.zhengru.LeaveManagementSystem.param.LoginUserParam;
 import top.zhengru.LeaveManagementSystem.param.ModifyPwdParam;
@@ -145,14 +146,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         UserDetailImpl userDetail = (UserDetailImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetail.getUsername();
         if (Objects.equals(modifyPwdParam.getOldPwd(), modifyPwdParam.getNewPwd())) {
-            return new ResponseResult<>(500, "请不要修改相同的密码");
+            throw new CustomException("请不要修改相同的密码！");
         }
         String pwd = sysUserMapper.getUserPwdByUsername(username);
         if (bCryptPasswordEncoder.matches(modifyPwdParam.getOldPwd(), pwd)) {
             sysUserMapper.modifyPwd(username, bCryptPasswordEncoder.encode(modifyPwdParam.getNewPwd()));
             return new ResponseResult<>(200, "修改成功");
         }
-        return new ResponseResult<>(500, "修改失败");
+        throw new CustomException("修改失败！");
     }
 
     /**
