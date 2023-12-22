@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zhengru.LeaveManagementSystem.base.ResponseResult;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import top.zhengru.LeaveManagementSystem.entity.LeaveInfo;
+import top.zhengru.LeaveManagementSystem.exception.CustomException;
 import top.zhengru.LeaveManagementSystem.mapper.LeaveInfoMapper;
 import top.zhengru.LeaveManagementSystem.service.ApprovalProcessService;
 import top.zhengru.LeaveManagementSystem.mapper.ApprovalProcessMapper;
@@ -46,7 +47,7 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
                 .getAuthentication().getPrincipal();
         LeaveInfo leaveInfo = leaveInfoMapper.selectById(leaveId);
         if (leaveInfo.getStatus() != 0) {
-            return new ResponseResult<>(500, "审批失败，此请假单审批流程已结束！");
+            throw new CustomException("审批失败，此请假单审批流程已结束！");
         }
         QueryWrapper<ApprovalProcess> approvalProcessQueryWrapper = new QueryWrapper<>();
         approvalProcessQueryWrapper.eq("leave_id", leaveId);
@@ -54,13 +55,13 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
         approvalProcessQueryWrapper.eq("action", 1);
         ApprovalProcess approvalInfo = approvalProcessMapper.selectOne(approvalProcessQueryWrapper);
         if (approvalInfo == null) {
-            return new ResponseResult<>(500, "审批失败，无审批权限！");
+            throw new CustomException("审批失败，无审批权限！");
         }
         if (!Objects.equals(leaveInfo.getNowOrder(), approvalInfo.getApproveOrder())) {
-            return new ResponseResult<>(500, "审批失败，您不是当前审批节点！");
+            throw new CustomException("审批失败，您不是当前审批节点！");
         }
         if (approvalInfo.getStatus() == -1) {
-            return new ResponseResult<>(500, "审批失败，您已驳回该审批！");
+            throw new CustomException("审批失败，您已驳回该审批！");
         }
         // 设置审批意见和审批状态
         approvalInfo.setReason(reason);
@@ -92,7 +93,7 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
                 .getAuthentication().getPrincipal();
         LeaveInfo leaveInfo = leaveInfoMapper.selectById(leaveId);
         if (leaveInfo.getStatus() != 0) {
-            return new ResponseResult<>(500, "审批失败，此请假单审批流程已结束！");
+            throw new CustomException("审批失败，此请假单审批流程已结束！");
         }
         QueryWrapper<ApprovalProcess> approvalProcessQueryWrapper = new QueryWrapper<>();
         approvalProcessQueryWrapper.eq("leave_id", leaveId);
@@ -100,13 +101,13 @@ public class ApprovalProcessServiceImpl extends ServiceImpl<ApprovalProcessMappe
         approvalProcessQueryWrapper.eq("action", 1);
         ApprovalProcess approvalInfo = approvalProcessMapper.selectOne(approvalProcessQueryWrapper);
         if (approvalInfo == null) {
-            return new ResponseResult<>(500, "审批失败，无审批权限！");
+            throw new CustomException("审批失败，无审批权限！");
         }
         if (!Objects.equals(leaveInfo.getNowOrder(), approvalInfo.getApproveOrder())) {
-            return new ResponseResult<>(500, "审批失败，您不是当前审批节点！");
+            throw new CustomException("审批失败，您不是当前审批节点！");
         }
         if (approvalInfo.getStatus() == 2) {
-            return new ResponseResult<>(500, "审批失败，您已通过该审批！");
+            throw new CustomException("审批失败，您已通过该审批！");
         }
         // 设置审批意见和审批状态
         approvalInfo.setReason(reason);

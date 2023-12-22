@@ -15,6 +15,7 @@ import top.zhengru.LeaveManagementSystem.config.MinIOConfig;
 import top.zhengru.LeaveManagementSystem.entity.ApprovalProcess;
 import top.zhengru.LeaveManagementSystem.entity.LeaveInfo;
 import top.zhengru.LeaveManagementSystem.entity.SysUser;
+import top.zhengru.LeaveManagementSystem.exception.CustomException;
 import top.zhengru.LeaveManagementSystem.mapper.ApprovalProcessMapper;
 import top.zhengru.LeaveManagementSystem.mapper.SysUserMapper;
 import top.zhengru.LeaveManagementSystem.param.NewLeaveParam;
@@ -61,15 +62,20 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
                 .getAuthentication().getPrincipal();
 
         LeaveInfo leaveInfo = new LeaveInfo();
+        if (newLeaveParam.getLeaveNo() == null) throw new CustomException("表单异常，请刷新页面重试！");
         leaveInfo.setLeaveNo(newLeaveParam.getLeaveNo());
         leaveInfo.setUnitName(userDetail.getUnitName());
         leaveInfo.setMajor(userDetail.getMajor());
         leaveInfo.setClassno(userDetail.getClassNo());
         leaveInfo.setUsername(userDetail.getUsername());
         leaveInfo.setRealName(userDetail.getRealName());
+        if (newLeaveParam.getPhone() == null) throw new CustomException("手机号不能为空！");
         leaveInfo.setPhone(newLeaveParam.getPhone());
+        if (newLeaveParam.getStartTime() == null) throw new CustomException("请假开始时间不能为空！");
         leaveInfo.setStartTime(newLeaveParam.getStartTime());
+        if (newLeaveParam.getEndTime() == null) throw new CustomException("请假结束时间不能为空！");
         leaveInfo.setEndTime(newLeaveParam.getEndTime());
+        if (newLeaveParam.getLeaveType() == null) throw new CustomException("请假类型不能为空！");
         leaveInfo.setLeaveType(newLeaveParam.getLeaveType());
         leaveInfo.setIsEvening(newLeaveParam.getIsEvening());
         leaveInfo.setRemark(newLeaveParam.getRemark());
@@ -114,14 +120,13 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
         Set<String> set = new HashSet<>();
         for (String person : approvalPersons) {
             if (!set.add(person)) {
-                return new ResponseResult<>(500, "请勿添加重复的审批人！");
+                throw new CustomException("请勿添加重复的审批人!");
             }
         }
         set.clear();
         for (String cc : ccPersons) {
             if (!set.add(cc)) {
-                return new ResponseResult<>(500, "请勿添加重复的抄送人！");
-            }
+                throw new CustomException("请勿添加重复的抄送人!");            }
         }
         // 审批流程表添加审批人
         int order = 1;
@@ -161,7 +166,7 @@ public class LeaveInfoServiceImpl extends ServiceImpl<LeaveInfoMapper, LeaveInfo
         if (count == approvalPersons.size() + ccPersons.size() + 1) {
             return new ResponseResult<>(200, "提交成功！");
         } else {
-            return new ResponseResult<>(500, "提交失败！");
+            throw new CustomException("提交失败");
         }
     }
 
